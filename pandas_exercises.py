@@ -73,7 +73,7 @@ df.groupby(["pclass", "sex"]).agg({"survived": ["sum", "count", "mean"]})
 
 
 # Görev 16: 30 yaşın altında olanlar 1, 30'a eşit ve üstünde olanlara 0 vericek bir fonksiyon yazın. Yazdığınız fonksiyonu kullanarak titanik veri
-    # setinde age_flag adında bir değişken oluşturunuz oluşturunuz. (apply ve lambda yapılarını kullanınız)
+# setinde age_flag adında bir değişken oluşturunuz oluşturunuz. (apply ve lambda yapılarını kullanınız)
 
 
 def age_category(age):
