@@ -135,7 +135,6 @@ df['agg_df'] = df.index
 df.head()
 
 agg_df.reset_index(inplace=True)
-df.head()
 
 #############################################
 # GÖREV 5: AGE değişkenini kategorik değişkene çeviriniz ve agg_df'e ekleyiniz.
@@ -144,8 +143,7 @@ df.head()
 # Aralıkları ikna edici olacağını düşündüğünüz şekilde oluşturunuz.
 # Örneğin: '0_18', '19_23', '24_30', '31_40', '41_70'
 
-df["agg_df"] = pd.cut(df["AGE"], [0, 18, 23, 30, 40, 70])
-df.head(50)
+df["agg_df"] = pd.cut(df["AGE"], [0, 18, 23, 30, 40, 70], labels=['0_18', '19_23', '24_30', '31_40', '41_70'])
 
 #############################################
 # GÖREV 6: Yeni level based müşterileri tanımlayınız ve veri setine değişken olarak ekleyiniz.
@@ -156,15 +154,9 @@ df.head(50)
 # Örneğin birden fazla şu ifadeden olabilir: USA_ANDROID_MALE_0_18
 # Bunları groupby'a alıp price ortalamalarını almak gerekmektedir.
 
-# type(df['agg_df'])
-# type(df['COUNTRY'])
-
-
-df.dtypes
 df['agg_df'] = df['agg_df'].astype(str)
-
 df['customers_level_based'] = (df['COUNTRY'] + "_" + df['SOURCE'] + "_" + df['SEX'] + "_" + df['agg_df']).str.upper()
-df.head()
+
 
 df.head(50)
 df.groupby(["customers_level_based"]).agg({"PRICE": "mean"})
@@ -175,10 +167,12 @@ df.head()
 # PRICE'a göre segmentlere ayırınız,
 # segmentleri "SEGMENT" isimlendirmesi ile agg_df'e ekleyiniz,
 # segmentleri betimleyiniz,
-agg_df["SEGMENT"] = pd.qcut(agg_df["PRICE"], 4, labels=["A", "B", "C", "D"])
-agg_df.head(30)
-agg_df.tail(30)
-agg_df.groupby("PRICE").agg({"PRICE": ["mean", "max", "sum"]})
+
+segmented_df = agg_df.copy()
+segmented_df["SEGMENT"] = pd.qcut(segmented_df["PRICE"], 4, labels=["A", "B", "C", "D"])
+segmented_df.groupby("SEGMENT").agg({"PRICE": ["mean", "max", "sum"]})
+
+
 #############################################
 # GÖREV 8: Yeni gelen müşterileri sınıflandırınız ne kadar gelir getirebileceğini tahmin ediniz.
 #############################################
@@ -188,15 +182,15 @@ df["SOURCE"].unique()
 df["SEX"].unique()
 df["agg_df"].unique()
 
-agg_df.sort_values(by="PRICE")
-new_user = "TUR_ANDROID_FEMALE_(30, 40]"
-df[df["customers_level_based"] == new_user]
+sorted_df = df.sort_values(by="PRICE")
+new_user = "TUR_ANDROID_FEMALE_30_40"
+filtered_user_df = sorted_df[sorted_df["customers_level_based"] == new_user]
+print(filtered_user_df)
 
 
 # 35 yaşında IOS kullanan bir Fransız kadını hangi segmente ve ortalama ne kadar gelir kazandırması beklenir?
-df.sort_values(by="PRICE")
-new_user = "FRA_IOS_FEMALE_(30, 40]"
-df[df["customers_level_based"] == new_user]
 
 sorted_df = df.sort_values(by="PRICE")
+new_user = "FRA_IOS_FEMALE_30_40"
 filtered_user_df = sorted_df[sorted_df["customers_level_based"] == new_user]
+print(filtered_user_df)
